@@ -27,6 +27,7 @@ jobs:
             --output /tmp/shfmt
           echo '76e77641faa025814b77f153b29796b8e6fa2fca03e0c76a691608b86c7ea7bf  /tmp/shfmt' |
             sha256sum --check
+          mkdir -p "$HOME/.local/bin"
           install --mode 0755 /tmp/shfmt "$HOME/.local/bin/shfmt"
           echo "$HOME/.local/bin" >>"$GITHUB_PATH"
 
