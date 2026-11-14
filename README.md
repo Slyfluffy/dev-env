@@ -77,3 +77,6 @@ pre-commit run --all-files
 
 The hooks run `shfmt` and `shellcheck` on shell scripts and verify final
 newlines in repository files.
+
+GitHub Actions runs the same shell formatting and ShellCheck checks, followed
+by the Bats test suite, for pushes and pull requests.
