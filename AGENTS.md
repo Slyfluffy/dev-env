@@ -4,18 +4,51 @@
 
 This repository contains `setup.bash`, an interactive installer for a
 personalized development environment on supported Ubuntu and OpenSUSE systems.
-The installer selects toolsets and installs distribution packages or latest
-upstream releases as appropriate.
+The installer selects toolsets and installs distribution packages or pinned
+upstream releases with checked digests.
 
 ## Important files
 
-- `setup.bash` - Main installer. Keep it Bash-compatible and preserve its
-  idempotent behavior.
+- `setup.bash` - Small executable entrypoint. Keep it Bash-compatible and
+  preserve its idempotent behavior.
+- `lib/` - Sourced installer libraries grouped by responsibility.
+- `tests/setup.bats` - Focused tests for pure selection and validation logic.
 - `README.md` - User-facing usage, platform, toolset, and installation
   documentation. Update it when command-line behavior or supported tools
   change.
 - `.pre-commit-config.yaml` - Repository checks for shell formatting,
   ShellCheck, Markdown linting, and final newlines.
+
+## Current organization
+
+The installer is split into sourced libraries grouped into these areas:
+
+- CLI parsing, toolset selection, platform detection, and global runtime state
+- Ubuntu and OpenSUSE package installation
+- Pinned artifact digests, downloads, checksum verification, and installation
+- Toolset orchestration and Docker-group configuration
+- Bash prompt management
+
+The structure is:
+
+```text
+setup.bash
+lib/
+  runtime.sh       # logging, errors, dry-run execution, cleanup
+  manifest.sh      # pinned versions, revisions, and repository fingerprints
+  cli.sh           # arguments and toolset selection
+  platform.sh      # OS, architecture, and sudo detection
+  packages-ubuntu.sh
+  packages-opensuse.sh
+  artifacts.sh     # pinned digests, downloads, verification, installation
+  toolsets.sh       # toolset orchestration
+  prompt.sh         # .bashrc management
+tests/
+  setup.bats
+```
+
+Keep `setup.bash` as the small executable entrypoint that sources the libraries
+and calls `main`.
 
 ## Development workflow
 
@@ -45,8 +78,9 @@ upstream releases as appropriate.
   failures.
 - Quote expansions unless word splitting or pathname expansion is explicitly
   intended.
-- Prefer existing helpers such as `run`, `die`, `log`, `toolset_enabled`, and
-  `install_github_asset` over duplicating behavior.
+- Prefer existing helpers such as `run`, `die`, `log`, `toolset_enabled`,
+  `expected_asset_digest`, and `install_github_asset` over duplicating
+  behavior.
 - Preserve `--dry-run`, `--yes`, supported architecture checks, and explicit
   unsupported-platform errors.
 - Keep installations repeatable and avoid duplicating user configuration.
