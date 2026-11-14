@@ -1,0 +1,47 @@
+name: Shell checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  shell:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install shellcheck and bats
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes bats shellcheck
+
+      - name: Install shfmt
+        run: |
+          curl --fail --location --retry 3 \
+            https://github.com/mvdan/sh/releases/download/v3.14.1/shfmt_v3.14.1_linux_amd64 \
+            --output /tmp/shfmt
+          echo '76e77641faa025814b77f153b29796b8e6fa2fca03e0c76a691608b86c7ea7bf  /tmp/shfmt' |
+            sha256sum --check
+          mkdir -p "$HOME/.local/bin"
+          install --mode 0755 /tmp/shfmt "$HOME/.local/bin/shfmt"
+          echo "$HOME/.local/bin" >>"$GITHUB_PATH"
+
+      - name: Run shfmt
+        run: |
+          find . -path './.git' -prune -o \
+            -type f \( -name '*.sh' -o -name '*.bash' -o -name '*.bats' \) \
+            -print0 | xargs -0 shfmt --diff --indent 2
+
+      - name: Run ShellCheck
+        run: |
+          find . -path './.git' -prune -o \
+            -type f \( -name '*.sh' -o -name '*.bash' -o -name '*.bats' \) \
+            -print0 | xargs -0 shellcheck
+
+      - name: Run Bats
+        run: bats tests

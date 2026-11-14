@@ -1,0 +1,23 @@
+repos:
+  - repo: local
+    hooks:
+      - id: shell-format
+        name: shell format
+        entry: shfmt
+        args: [--diff, --indent, "2"]
+        language: system
+        types: [shell]
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck
+        language: system
+        types: [shell]
+      - id: markdownlint
+        name: markdownlint
+        entry: markdownlint-cli2
+        language: system
+        types: [markdown]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
