@@ -20,7 +20,7 @@ or choose `all`:
 | Python | Python 3, uv, Ruff, pytest, and pytest-cov |
 | Go | Go |
 | Containers | Docker, Docker Compose, Hadolint, Dockerfmt, and Cosign |
-| Kubernetes | kubectl and Minikube |
+| Kubernetes | kubectl, Helm, and Minikube |
 | Markdown | Node.js/npm and markdownlint-cli2 |
 
 ## Options
@@ -44,7 +44,7 @@ Toolset selection remains interactive even when `--yes` is supplied.
 - Docker is installed without changing group membership by default. Pass
   `--docker-group` to add the current user to the `docker` group (root-equivalent
   access); start a new login session before using Docker without `sudo`.
-- Pinned upstream releases are downloaded for `kubectl`, Minikube, shfmt,
+- Pinned upstream releases are downloaded for `kubectl`, Helm, Minikube, shfmt,
   Hadolint, Cosign, uv, and Docker Compose, with published checksums verified.
 - Dockerfmt is built from a pinned `reteps/dockerfmt` commit.
 - Package-manager dependencies intentionally follow the distribution's current

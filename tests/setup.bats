@@ -50,6 +50,16 @@
   [ "${#output}" -eq 129 ]
 }
 
+@test "has a pinned Helm digest for each supported architecture" {
+  run bash -c '
+    source "$1"
+    expected_helm_digest amd64
+    expected_helm_digest arm64
+  ' bash "${BATS_TEST_DIRNAME}/../setup.bash"
+  [ "$status" -eq 0 ]
+  [ "${#output}" -eq 129 ]
+}
+
 @test "all pinned GitHub asset digests have the expected format" {
   run bash -c '
     source "$1"

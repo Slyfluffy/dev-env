@@ -162,6 +162,40 @@ expected_kubectl_digest() {
   esac
 }
 
+expected_helm_digest() {
+  case "$1" in
+  amd64) printf '%s\n' d1c0278d46beab79582d7e50f5b3dc206944ba8e577cde618513fd07daa53983 ;;
+  arm64) printf '%s\n' df31cb61680ef728f82c770e5280dd565617bee6b039d37e85c677288be4bbb0 ;;
+  *) die "no pinned Helm SHA256 digest for architecture: $1" ;;
+  esac
+}
+
+install_helm() {
+  local helm_archive="$TEMP_DIR/helm.tar.gz"
+  local helm_directory="$TEMP_DIR/helm"
+  local helm_asset="helm-${HELM_TAG}-linux-${ARCH}.tar.gz"
+  local helm_digest
+
+  helm_digest=$(expected_helm_digest "$ARCH")
+  if "$DRY_RUN"; then
+    run curl -fL --retry 3 "https://get.helm.sh/${helm_asset}" -o "$helm_archive"
+    log "would verify Helm against pinned SHA256 ${helm_digest}"
+    run tar -xzf "$helm_archive" -C "$helm_directory"
+    run "${SUDO[@]}" install -m 0755 \
+      "${helm_directory}/linux-${ARCH}/helm" /usr/local/bin/helm
+    return
+  fi
+
+  curl -fL --retry 3 "https://get.helm.sh/${helm_asset}" -o "$helm_archive"
+  verify_sha256 "$helm_archive" "$helm_digest"
+  mkdir -p "$helm_directory"
+  tar -xzf "$helm_archive" -C "$helm_directory"
+  [[ -x "${helm_directory}/linux-${ARCH}/helm" ]] ||
+    die "Helm archive did not contain the expected binary"
+  run "${SUDO[@]}" install -m 0755 \
+    "${helm_directory}/linux-${ARCH}/helm" /usr/local/bin/helm
+}
+
 install_dockerfmt() {
   local go_bin="$TEMP_DIR/dockerfmt"
   if "$DRY_RUN"; then
@@ -197,6 +231,7 @@ install_upstream_tools() {
 
   if toolset_enabled kubernetes; then
     install_kubectl
+    install_helm
     install_github_asset kubernetes/minikube "minikube-linux-${ARCH}" \
       /usr/local/bin/minikube "$MINIKUBE_TAG"
   fi

@@ -8,6 +8,7 @@ readonly SHFMT_TAG=v3.14.1
 readonly HADOLINT_TAG=v2.15.1
 readonly COSIGN_TAG=v3.1.4
 readonly MINIKUBE_TAG=v1.39.0
+readonly HELM_TAG=v4.3.2
 readonly DOCKER_COMPOSE_TAG=v5.7.1
 readonly KUBECTL_VERSION=v1.37.2
 readonly MARKDOWNLINT_CLI2_VERSION=0.24.1
