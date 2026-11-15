@@ -38,12 +38,13 @@ select_toolsets() {
   printf '  5) go\n'
   printf '  6) containers\n'
   printf '  7) kubernetes\n'
-  printf '  8) markdown\n\n'
+  printf '  8) markdown\n'
+  printf '  9) ansible\n\n'
   read -r -p "Select toolsets (comma-separated numbers, default: all): " selection
   selection=${selection:-1}
 
   if [[ "$selection" == 1 ]]; then
-    SELECTED_TOOLSETS=(general bash python go containers kubernetes markdown)
+    SELECTED_TOOLSETS=(general bash python go containers kubernetes markdown ansible)
     return
   fi
 
@@ -53,7 +54,7 @@ select_toolsets() {
     option="${option%"${option##*[![:space:]]}"}"
     case "$option" in
     1)
-      SELECTED_TOOLSETS=(general bash python go containers kubernetes markdown)
+      SELECTED_TOOLSETS=(general bash python go containers kubernetes markdown ansible)
       return
       ;;
     2) SELECTED_TOOLSETS+=(general) ;;
@@ -63,6 +64,7 @@ select_toolsets() {
     6) SELECTED_TOOLSETS+=(containers) ;;
     7) SELECTED_TOOLSETS+=(kubernetes) ;;
     8) SELECTED_TOOLSETS+=(markdown) ;;
+    9) SELECTED_TOOLSETS+=(ansible) ;;
     *) die "invalid toolset selection: $option" ;;
     esac
   done
@@ -72,7 +74,7 @@ validate_toolsets() {
   local toolset
   for toolset in "${SELECTED_TOOLSETS[@]}"; do
     case "$toolset" in
-    general | bash | python | go | containers | kubernetes | markdown) ;;
+    general | bash | python | go | containers | kubernetes | markdown | ansible) ;;
     *) die "unknown toolset: $toolset" ;;
     esac
   done

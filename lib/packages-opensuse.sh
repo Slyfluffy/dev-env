@@ -56,6 +56,14 @@ install_opensuse_packages() {
   fi
   toolset_enabled containers && packages+=(docker)
   toolset_enabled markdown && packages+=(nodejs npm)
+  if toolset_enabled ansible; then
+    packages+=(ansible)
+    if python_package=$(opensuse_python_package python313-ansible-lint ansible-lint); then
+      packages+=("$python_package")
+    else
+      OPENSUSE_PYTHON_UV_TOOLS+=(ansible-lint)
+    fi
+  fi
   run "${SUDO[@]}" zypper --non-interactive install "${packages[@]}"
 
   # OpenSUSE supplies Docker through zypper; Compose is filled in upstream

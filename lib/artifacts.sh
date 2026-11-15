@@ -259,6 +259,7 @@ install_upstream_tools() {
           run uv tool install --force "pytest==${PYTEST_VERSION}"
           ;;
         ruff) run uv tool install --force "ruff==${RUFF_VERSION}" ;;
+        ansible-lint) run uv tool install --force ansible-lint ;;
         *) die "unsupported uv tool fallback: $python_uv_tool" ;;
         esac
       done

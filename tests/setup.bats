@@ -22,6 +22,17 @@
   [ "${output##*$'\n'}" = "bash kubernetes" ]
 }
 
+@test "selects the Ansible toolset" {
+  run bash -c '
+    source "$1"
+    select_toolsets <<< "9"
+    printf "%s\n" "${SELECTED_TOOLSETS[*]}"
+  ' bash "${BATS_TEST_DIRNAME}/../setup.bash"
+
+  [ "$status" -eq 0 ]
+  [ "${output##*$'\n'}" = "ansible" ]
+}
+
 @test "parses Ubuntu release metadata needed by Docker setup" {
   run bash -c '
     source "$1"

@@ -14,6 +14,7 @@ install_ubuntu_packages() {
   fi
   toolset_enabled containers && packages+=(gnupg)
   toolset_enabled markdown && packages+=(nodejs npm)
+  toolset_enabled ansible && packages+=(ansible ansible-lint)
   run "${SUDO[@]}" apt-get update
   run "${SUDO[@]}" apt-get install -y "${packages[@]}"
 

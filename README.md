@@ -22,6 +22,7 @@ or choose `all`:
 | Containers | Docker, Docker Compose, Hadolint, Dockerfmt, and Cosign |
 | Kubernetes | kubectl, Helm, and Minikube |
 | Markdown | Node.js/npm and markdownlint-cli2 |
+| Ansible | Ansible and ansible-lint |
 
 ## Options
 
@@ -41,6 +42,7 @@ Toolset selection remains interactive even when `--yes` is supplied.
 - The General toolset installs `pre-commit` from the distribution package
   (`python313-pre-commit` on OpenSUSE).
 - The Markdown toolset installs pinned `markdownlint-cli2` globally through npm.
+- The Ansible toolset installs Ansible and `ansible-lint`.
 - Docker is installed without changing group membership by default. Pass
   `--docker-group` to add the current user to the `docker` group (root-equivalent
   access); start a new login session before using Docker without `sudo`.
